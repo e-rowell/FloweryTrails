@@ -94,13 +94,13 @@ public class Main {
 
     private void findShortestPaths(Node highestNode) {
         Node shortestDist = null;
-        for(Node node : highestNode.myAdjacentNodes) {
+        for (Node node : highestNode.myAdjacentNodes) {
 
 
             if (node.visited) {
                 if (shortestDist == null) {
                     shortestDist = node;
-                } else if (node.myAbsoluteShortestPath < shortestDist.myAbsoluteShortestPath){
+                } else if (node.myAbsoluteShortestPath < shortestDist.myAbsoluteShortestPath) {
                     shortestDist = node;
                 }
             }
@@ -123,6 +123,10 @@ public class Main {
             // if we've reached the highest point, check if it's less
             // than global shortest path and return back up the recursive tree.
             if (shortestNode != null && shortestNode.myPoint == highestPeak) {
+
+                shortestPaths.get(numPaths).push(shortestNode);
+                startNewPath();
+
                 if (shortestNode.myShortestPath <= globalShortestPath) {
                     globalShortestPath = shortestNode.myShortestPath;
                 }
@@ -162,10 +166,10 @@ public class Main {
 
             for (Node node : myAdjacentNodes) {
 
-                if (node.myPoint == highestPeak) {
+                /*if (node.myPoint == highestPeak) {
                     shortestPaths.get(numPaths).push(node);
                     startNewPath();
-                }
+                }*/
 
                 // not concerned with entrance node
                 if (node.myPoint == 0) continue;
@@ -181,12 +185,9 @@ public class Main {
                 // if it hasn't been visited, check if it's shorter than the current path
                 if (!node.visited) {
                     allAdjacentVisited = false;
-                    if (shortestAdjacentNode == null) {
-                        shortestAdjacentNode = node;
-                    }
-                    // if it's path is shorter than the current, choose that one.
-                    else if (trailDistances[this.myPoint][node.myPoint] <
-                            trailDistances[this.myPoint][shortestAdjacentNode.myPoint]) {
+                    if (shortestAdjacentNode == null ||
+                            trailDistances[this.myPoint][node.myPoint] <
+                                    trailDistances[this.myPoint][shortestAdjacentNode.myPoint]) {
                         shortestAdjacentNode = node;
                     }
                 }
@@ -195,6 +196,9 @@ public class Main {
             if (allAdjacentVisited) {
                 myAbsoluteShortestPath = myShortestPath;
             }
+
+            if (shortestAdjacentNode != null && shortestAdjacentNode.myShortestPath > globalShortestPath)
+                shortestAdjacentNode = null;
 
             return shortestAdjacentNode;
         }
